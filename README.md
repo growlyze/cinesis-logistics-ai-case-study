@@ -11,4 +11,6 @@
 - **L08 (Dallas to McAllen, $1700)** is the highest-paying load on the board. It was deliberately rejected because its weight (12,600 lbs) exceeds the assumed safe payload capacity (12,000 lbs) of the driver's hotshot gooseneck setup. Load L03 (14,200 lbs) was also rejected for this reason. Consequently, only 2 loads perfectly meet all strict criteria (L02 and L05). 
 
 ## Execution
-Run `python script.py` to see the structured profile (Part A) and ranked loads (Part B).
+The solution has been split into two scripts to match the prompt's two parts:
+- Run `python part_a.py` to see the structured extracted driver profile.
+- Run `python part_b.py` to see the ranked eligible loads matched against that profile.
