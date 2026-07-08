@@ -33,9 +33,14 @@ streamlit run app.py
 
 ## Extraction approach (Part A)
 `solution.py` extracts the profile with targeted phrase-matching by default (finds the location callout, the rate condition, the equipment noun, flags anything implied) - deterministic and auditable with no API key required. If `OPENAI_API_KEY` is set, it instead calls the OpenAI API (raw `requests` call to `/v1/chat/completions`, no SDK dependency) with a system prompt that spells out the exact fields to pull and requires, for every field, a `stated` vs `inferred` basis plus the evidence line it used. Both paths produce the same profile schema and feed directly into Part B.
+<img width="1640" height="671" alt="image" src="https://github.com/user-attachments/assets/86569940-2139-4311-9e59-85fff3f6fc0b" />
+
 
 ## Incomplete rows (Part B)
 L06 is missing price; L07 is missing destination. Neither price nor destination is guessed - both rows are excluded from ranking and reported separately, since fabricating either would silently corrupt the effective rate/mile math.
 
 ## Rejected high-paying load
 **L08** ($1,700, the highest raw price on the board) passes the equipment/weight/rate filters, but its destination (McAllen) is far south of home base (San Antonio), adding heavy deadhead-home miles. Its effective rate ($2.480/mi) loses to L03 ($3.098/mi, only $1,500) once deadhead is properly counted - exactly the "don't rank on price alone" trap. **L04** and **L01** (Van trailers) are excluded outright on equipment mismatch regardless of price.
+
+<img width="1562" height="613" alt="image" src="https://github.com/user-attachments/assets/5bc347b3-fe3b-4738-84df-c7481fe89ac9" />
+
