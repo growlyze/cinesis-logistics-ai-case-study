@@ -1,0 +1,12 @@
+PART B — Your Top 3 Loads,,
+"Using the profile you extracted in Part A, list the 3 eligible loads with the highest effective rate per mile = price ÷ (deadhead-to-origin + loaded miles + deadhead-home).
+
+Filter by equipment, weight, and minimum rate BEFORE ranking.",,
+,,
+Rank,Load ID,Effective Rate/Mile
+1,L03,3.098
+2,L08,2.480
+3,L02,2.418
+,,
+README (≤200 words):,,
+"See README.md in the GitHub repo. Summary: filtered on equipment (Hotshot/Gooseneck), weight capacity (16,500 lb, inferred), and min rate ($2.00/mi). L06 (missing price) and L07 (missing destination) excluded, not guessed. Rejected high-paying load: L08 ($1,700, highest price on board) — passes filters but its long deadhead-home from McAllen back to San Antonio drops it to 2.480/mi, behind L03's 3.098/mi despite L03's lower $1,500 price.",,

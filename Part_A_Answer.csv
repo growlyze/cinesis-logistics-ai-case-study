@@ -1,0 +1,15 @@
+PART A — Driver Profile,,,
+Read the 'Sample Conversation' tab and fill in the YOUR ANSWER column. The EXAMPLE column shows the expected format only — it is NOT the right answer.,,,
+,,,
+Field,YOUR ANSWER,,EXAMPLE (format ONLY)
+Current Location,"Dallas, TX",,"Austin, TX"
+Current Lat,32.7767,,30.2672
+Current Lon,-96.797,,-97.7431
+Home Base,"San Antonio, TX",,"Houston, TX"
+Home Lat,29.4241,,29.7604
+Home Lon,-98.4936,,-95.3698
+Minimum Rate Per Mile,$2.00,,$2.50
+Equipment Type(s),Hotshot / Gooseneck,,Reefer / Dry Van
+Weight Capacity (lb),"16,500 (inferred — not stated by driver; see README)",,"44,000"
+,,,
+"Tip: the driver never states these as clean fields — they're scattered through normal speech. Where a value is implied rather than said outright, write your interpretation.",,,

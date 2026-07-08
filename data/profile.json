@@ -1,0 +1,33 @@
+{
+  "current_location": "Dallas, TX",
+  "current_lat": 32.7767,
+  "current_lon": -96.797,
+  "current_location_evidence": [
+    "Yes, that's correct. I'm usually in that area, but I'm in Dallas."
+  ],
+  "current_location_basis": "stated",
+  "home_base": "San Antonio, TX",
+  "home_lat": 29.4241,
+  "home_lon": -98.4936,
+  "home_base_evidence": [
+    "Dispatch: \"I think you're based out in San Antonio. Is that correct?\"",
+    "Driver: \"Yes, that's correct.\""
+  ],
+  "home_base_basis": "stated (confirmed dispatcher's question)",
+  "min_rate_per_mile": 2.0,
+  "min_rate_per_mile_evidence": [
+    "As long as it's above $2 per mile, I'll consider it. I already have enough work that I can skip loads if they're not worth it."
+  ],
+  "min_rate_per_mile_basis": "stated",
+  "equipment_types": [
+    "Hotshot",
+    "Gooseneck"
+  ],
+  "equipment_evidence": [
+    "I might only run two or three days a week, but I still make good money-like $2,300 to $2,500 going Corpus to Odessa, or $1,800 to $2,000 from San Antonio to Midland. I run a hotshot gooseneck trailer."
+  ],
+  "equipment_basis": "stated - driver says \"I run a hotshot gooseneck trailer,\" describing one rig; both terms are treated as matching equipment categories.",
+  "weight_capacity_lb": 16500,
+  "weight_capacity_evidence": [],
+  "weight_capacity_basis": "inferred - not stated by the driver. The only weight mentioned (44,000 lb) is for the Huntsville van load discussed hypothetically, not the driver's own equipment. 16,500 lb is a typical payload ceiling for a hotshot/gooseneck rig and is used as a placeholder capacity."
+}
