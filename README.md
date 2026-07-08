@@ -2,15 +2,17 @@
 
 ## Run it
 ```
-pip install requests
-export ANTHROPIC_API_KEY=sk-ant-...      # your own key
-python3 part_a_extract.py                # calls the Claude API -> data/profile.json
-python3 part_b_rank.py                   # reads data/profile.json + data/loads.csv
+python3 solution.py                      # runs Part A then Part B end to end
 ```
-`data/profile.json` is already checked in from a live run, so `part_b_rank.py` works
-out of the box even without an API key. A deterministic, non-LLM version of the same
-extraction logic is included as `part_a_extract_rulebased.py` for comparison/offline use
-(same output schema, no API key required).
+By default Part A uses a deterministic, rule/keyword-based extractor, so the whole
+pipeline runs with no API key and no network call. If `OPENAI_API_KEY` is set in the
+environment, Part A instead calls the OpenAI API to do the extraction; either path
+produces the same profile shape and feeds directly into Part B.
+```
+pip install requests
+export OPENAI_API_KEY=sk-...             # optional, your own key
+python3 solution.py
+```
 
 ## Assumptions
 - **Current location**: Dallas, TX - stated directly ("I'm in Dallas").
@@ -20,7 +22,7 @@ extraction logic is included as `part_a_extract_rulebased.py` for comparison/off
 - **Weight capacity**: 16,500 lb - **inferred**, not stated. The only weight mentioned (44,000 lb) belongs to the Huntsville van load discussed hypothetically, not the driver's rig. 16,500 lb is a typical payload ceiling for a hotshot/gooseneck combo.
 
 ## Extraction approach (Part A)
-`part_a_extract.py` calls the Claude API directly (raw `requests` call to `/v1/messages`, no SDK dependency) with a system prompt that spells out the exact fields to pull and requires, for every field, a `stated` vs `inferred` basis plus the evidence line it used - so the extraction stays auditable even though a model is doing the reading. `part_a_extract_rulebased.py` is a deterministic fallback using targeted phrase-matching (same output schema), useful for offline runs or comparison.
+`solution.py` extracts the profile with targeted phrase-matching by default (finds the location callout, the rate condition, the equipment noun, flags anything implied) - deterministic and auditable with no API key required. If `OPENAI_API_KEY` is set, it instead calls the OpenAI API (raw `requests` call to `/v1/chat/completions`, no SDK dependency) with a system prompt that spells out the exact fields to pull and requires, for every field, a `stated` vs `inferred` basis plus the evidence line it used. Both paths produce the same profile schema and feed directly into Part B.
 
 ## Incomplete rows (Part B)
 L06 is missing price; L07 is missing destination. Neither price nor destination is guessed - both rows are excluded from ranking and reported separately, since fabricating either would silently corrupt the effective rate/mile math.
