@@ -80,6 +80,10 @@ Return ONLY a single JSON object with this exact shape, no prose, no markdown fe
 # ---------------------------------------------------------------------------
 
 def load_transcript(path=CONVO_PATH):
+    """Accepts a file path, or an already-open text file-like object
+    (e.g. an uploaded file), so this can be reused by the Streamlit UI."""
+    if hasattr(path, "read"):
+        return list(csv.DictReader(path))
     with open(path, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
@@ -196,8 +200,8 @@ def extract_profile_llm(transcript_text):
     return json.loads(raw_text)
 
 
-def run_part_a():
-    rows = load_transcript()
+def run_part_a(transcript_src=CONVO_PATH, save=True):
+    rows = load_transcript(transcript_src)
 
     if os.environ.get("OPENAI_API_KEY"):
         transcript_text = "\n".join(f"{r['Speaker']}: {r['Dialogue']}" for r in rows)
@@ -222,9 +226,10 @@ def run_part_a():
           f"[{profile['weight_capacity_basis']}]")
     print("=" * 70)
 
-    with open(PROFILE_OUT, "w") as f:
-        json.dump(profile, f, indent=2)
-    print(f"\nSaved -> {PROFILE_OUT}")
+    if save:
+        with open(PROFILE_OUT, "w") as f:
+            json.dump(profile, f, indent=2)
+        print(f"\nSaved -> {PROFILE_OUT}")
 
     return profile
 
@@ -247,6 +252,10 @@ def is_missing(value):
 
 
 def load_board(path=LOADS_PATH):
+    """Accepts a file path, or an already-open text file-like object
+    (e.g. an uploaded file), so this can be reused by the Streamlit UI."""
+    if hasattr(path, "read"):
+        return list(csv.DictReader(path))
     with open(path, newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
 
@@ -318,8 +327,8 @@ def evaluate_loads(rows, profile):
     return results, skipped
 
 
-def run_part_b(profile, top_n=3):
-    rows = load_board()
+def run_part_b(profile, loads_src=LOADS_PATH, top_n=3):
+    rows = load_board(loads_src)
     results, skipped = evaluate_loads(rows, profile)
 
     print("=" * 100)

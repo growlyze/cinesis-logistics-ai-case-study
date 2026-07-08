@@ -14,6 +14,15 @@ export OPENAI_API_KEY=sk-...             # optional, your own key
 python3 solution.py
 ```
 
+### UI
+A minimal Streamlit UI (`app.py`) lets you upload the transcript CSV and loads CSV and
+runs the same `solution.py` logic, showing the extracted profile and ranked loads in the
+browser.
+```
+pip install -r requirements.txt
+streamlit run app.py
+```
+
 ## Assumptions
 - **Current location**: Dallas, TX - stated directly ("I'm in Dallas").
 - **Home base**: San Antonio, TX - driver confirms dispatch's question directly.
