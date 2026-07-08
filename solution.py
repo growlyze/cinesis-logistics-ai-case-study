@@ -248,7 +248,11 @@ def haversine(lat1, lon1, lat2, lon2):
 
 
 def is_missing(value):
-    return value is None or str(value).strip().upper() in ("", "MISSING", "N/A")
+    if value is None:
+        return True
+    if isinstance(value, float) and math.isnan(value):
+        return True
+    return str(value).strip().upper() in ("", "MISSING", "N/A")
 
 
 def load_board(path=LOADS_PATH):

@@ -1,75 +1,83 @@
 """
 Cinesis Good Fit Test - Streamlit UI
 =====================================
-Simple UI wrapper around solution.py: upload the transcript CSV and the
-loads CSV, click Run, and it extracts the driver profile (Part A) then
-ranks eligible loads (Part B).
+UI wrapper around solution.py: the driver call transcript and load board
+load pre-filled with the sample case-study data, editable in-browser.
+Click Run to extract the driver profile (Part A) then rank eligible loads
+(Part B) - all inline on this page, no file upload required.
 
 Run:
     pip install -r requirements.txt
     streamlit run app.py
 """
 
-import io
 import json
+import os
 
 import pandas as pd
 import streamlit as st
 
 from solution import (
+    CONVO_PATH,
+    LOADS_PATH,
     evaluate_loads,
     extract_profile_llm,
     extract_profile_rulebased,
-    load_board,
-    load_transcript,
 )
 
 st.set_page_config(page_title="Cinesis Load Matcher", page_icon="🚚", layout="wide")
 
 st.title("🚚 Driver Profile Extraction + Load Matching")
 st.caption(
-    "Upload a driver/dispatcher call transcript and the load board. "
-    "This runs Part A (extract the driver profile) then Part B "
-    "(filter + rank eligible loads by effective rate/mile)."
+    "The sample driver/dispatcher transcript and load board below are pre-filled "
+    "from the case study. Edit either table to test different inputs, then click "
+    "Run to extract the driver profile (Part A) and rank eligible loads (Part B)."
 )
 
+if "transcript_df" not in st.session_state:
+    st.session_state.transcript_df = pd.read_csv(CONVO_PATH)
+if "loads_df" not in st.session_state:
+    st.session_state.loads_df = pd.read_csv(LOADS_PATH)
+
 with st.sidebar:
-    st.header("Inputs")
-    transcript_file = st.file_uploader(
-        "Driver call transcript (CSV)", type=["csv"],
-        help="Expected columns: Speaker, Dialogue",
-    )
-    loads_file = st.file_uploader(
-        "Load board (CSV)", type=["csv"],
-        help="Expected columns: Load ID, Trailer, Weight, Price ($), "
-             "Destination, Origin Lat, Origin Lon, Dest Lat, Dest Lon",
-    )
+    st.header("Options")
     top_n = st.number_input("Top N loads to show", min_value=1, max_value=20, value=3)
     use_llm = st.checkbox(
         "Use OpenAI for extraction (requires OPENAI_API_KEY env var)",
         value=False,
     )
-    run = st.button("Run", type="primary", disabled=not (transcript_file and loads_file))
+    if st.button("Reset to sample data"):
+        st.session_state.transcript_df = pd.read_csv(CONVO_PATH)
+        st.session_state.loads_df = pd.read_csv(LOADS_PATH)
+        st.rerun()
+    run = st.button("Run", type="primary")
 
-if not (transcript_file and loads_file):
-    st.info("Upload both CSV files in the sidebar, then click Run.")
-    st.stop()
+st.subheader("Driver Call Transcript")
+transcript_df = st.data_editor(
+    st.session_state.transcript_df,
+    num_rows="dynamic",
+    use_container_width=True,
+    key="transcript_editor",
+)
+
+st.subheader("Load Board")
+loads_df = st.data_editor(
+    st.session_state.loads_df,
+    num_rows="dynamic",
+    use_container_width=True,
+    key="loads_editor",
+)
 
 if not run:
+    st.info("Edit the tables above if you'd like, then click **Run** in the sidebar.")
     st.stop()
 
+rows = transcript_df.to_dict("records")
 
-def to_text_stream(uploaded_file):
-    return io.StringIO(uploaded_file.getvalue().decode("utf-8"))
-
-
-# --- Part A ------------------------------------------------------------
+# --- Part A --------------------------------------------------------------
 st.header("Part A - Extracted Driver Profile")
 
-rows = load_transcript(to_text_stream(transcript_file))
-
 if use_llm:
-    import os
     if not os.environ.get("OPENAI_API_KEY"):
         st.error("OPENAI_API_KEY is not set in the environment. Uncheck "
                   "'Use OpenAI' or set the key before running.")
@@ -107,7 +115,7 @@ st.download_button(
 # --- Part B --------------------------------------------------------------
 st.header("Part B - Eligible Loads Ranked by Effective Rate/Mile")
 
-load_rows = load_board(to_text_stream(loads_file))
+load_rows = loads_df.to_dict("records")
 results, skipped = evaluate_loads(load_rows, profile)
 
 results_df = pd.DataFrame(results)

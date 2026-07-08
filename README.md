@@ -15,9 +15,10 @@ python3 solution.py
 ```
 
 ### UI
-A minimal Streamlit UI (`app.py`) lets you upload the transcript CSV and loads CSV and
-runs the same `solution.py` logic, showing the extracted profile and ranked loads in the
-browser.
+A minimal Streamlit UI (`app.py`) opens with the sample transcript and load board
+pre-filled in editable tables - no file upload needed. Edit either table to try
+different inputs, then click Run to see the extracted profile and ranked loads
+inline, using the same `solution.py` logic as the CLI.
 ```
 pip install -r requirements.txt
 streamlit run app.py
